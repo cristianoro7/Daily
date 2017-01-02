@@ -14,18 +14,18 @@ public class WelcomeViewModel {
     /**
      * url for welcome image
      */
-    public ObservableField<String> mStartImageUrl = new ObservableField<>();
+     public ObservableField<String> mStartImageUrl = new ObservableField<>();
 
     /**
      * Image supplier
      */
-    public ObservableField<String> mImageSource = new ObservableField<>();
+     public ObservableField<String> mImageSource = new ObservableField<>();
 
-    public void setImageUrl(String url) {
+    private void setImageUrl(String url) {
         mStartImageUrl.set(url);
     }
 
-    public void setImageSource(String text) {
+    private void setImageSource(String text) {
         mImageSource.set(text);
     }
 

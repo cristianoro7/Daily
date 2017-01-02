@@ -16,6 +16,7 @@ public class WelcomeBindingAdapter {
 
     @BindingAdapter("android:src")
     public static void loadImage(ImageView imageView, String src) {
+        imageView.setImageDrawable(null);
         Picasso.with(imageView.getContext()).load(src).into(imageView);
         Log.d(TAG, "loadImage: url:" + src);
     }

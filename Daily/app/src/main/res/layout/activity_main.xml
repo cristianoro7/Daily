@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data class="MainActivityBinding">
+
+        <variable
+            name="model"
+            type="desperado.com.daily.main.viewmodel.MainViewModel"/>
+
+    </data>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/main_dl_drawable_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:openDrawer="start">
+
+        <!--<include layout="@layout/part_main_content"-->
+            <!--android:id="@+id/part_main_content"/>-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/main_tb_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="4dp"
+                app:titleTextColor="@color/white"
+                app:navigationIcon="@drawable/menu"
+                app:title="嘻嘻"
+                android:background="@color/colorPrimary"
+                app:theme="@style/ToolbarTheme">
+
+            </android.support.v7.widget.Toolbar>
+
+            <desperado.com.daily.ui.BannerView
+                android:layout_below="@+id/main_tb_toolbar"
+                android:id="@+id/main_bv_banner_view"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+
+                >
+
+            </desperado.com.daily.ui.BannerView>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/main_rl_drawer_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#F9F9F9"
+            android:clickable="false">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/main_rv_drawer_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="#ffffff"
+                android:clickable="true"
+                app:adapter="@{model.getNavAdapter()}"
+                app:layout_manager="@{model.getNavLayoutManager()}"/>
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.DrawerLayout>
+</layout>
