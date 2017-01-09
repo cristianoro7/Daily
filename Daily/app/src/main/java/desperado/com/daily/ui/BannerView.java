@@ -83,7 +83,7 @@ public class BannerView extends FrameLayout implements ViewPager.OnPageChangeLis
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_banner_view_content, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_bv_content, null);
         this.mVpViewPager = (ViewPager) view.findViewById(R.id.banner_view_vp_view_pager);
         this.mLlIndicate = (LinearLayout) view.findViewById(R.id.banner_view_ll_indicate);
         mPagePointWidth = ConvertUtil.dip2Px(mContext, POINT_SELECTED_WIDTH);

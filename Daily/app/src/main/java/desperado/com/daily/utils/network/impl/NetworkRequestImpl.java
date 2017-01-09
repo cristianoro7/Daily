@@ -1,8 +1,9 @@
-package desperado.com.daily.utils.network;
+package desperado.com.daily.utils.network.impl;
 
 import java.io.IOException;
 
 import desperado.com.daily.application.DailyApplication;
+import desperado.com.daily.utils.network.interfaces.INetworkRequest;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -10,12 +11,11 @@ import okhttp3.Response;
  * Created by desperado on 16-12-31.
  */
 
-public abstract class NetworkRequest {
+public class NetworkRequestImpl implements INetworkRequest {
 
-    private static final String TAG = NetworkRequest.class.getSimpleName();
-
-    public String doGet() {
-        final Request request = new Request.Builder().url(getUrl()).build();
+    @Override
+    public String doGet(String url) {
+        final Request request = new Request.Builder().url(url).build();
         Response response = null;
         try {
             response = DailyApplication.getAppComponent().getOkHttpClient().newCall(request).execute();
@@ -28,5 +28,4 @@ public abstract class NetworkRequest {
         return null;
     }
 
-    public abstract String getUrl();
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="item"
+            type="desperado.com.daily.bean.LatestNewBean.StoriesBean" />
+    </data>
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_margin="9dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:orientation="vertical"
+        card_view:cardCornerRadius="7dp"
+        card_view:cardElevation="4dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/new_tv_text"
+                android:layout_width="0dp"
+                android:layout_weight="0.7"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="@{item.title}"
+                android:textColor="@color/textColor"
+                android:textSize="17sp"
+                />
+
+            <ImageView
+                android:id="@+id/new_iv_iamge"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:scaleType="centerCrop"
+                android:src="@{item.images.get(0)}" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>

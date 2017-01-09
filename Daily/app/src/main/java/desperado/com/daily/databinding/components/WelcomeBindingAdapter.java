@@ -2,6 +2,7 @@ package desperado.com.daily.databinding.components;
 
 import android.databinding.BindingAdapter;
 import android.util.Log;
+import android.webkit.WebView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -19,5 +20,10 @@ public class WelcomeBindingAdapter {
         imageView.setImageDrawable(null);
         Picasso.with(imageView.getContext()).load(src).into(imageView);
         Log.d(TAG, "loadImage: url:" + src);
+    }
+
+    @BindingAdapter({"load_data"})
+    public static void loadBody(WebView webView, String body) {
+        webView.loadDataWithBaseURL(null, body, "text/html", "utf-8", null);
     }
 }

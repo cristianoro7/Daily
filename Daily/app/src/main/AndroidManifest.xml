@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".main.activity.MainActivity"/>
+        <activity android:name=".newdetail.activity.NewDetailActivity"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

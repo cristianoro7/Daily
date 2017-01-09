@@ -38,7 +38,7 @@ public abstract class OnItemTouchListener implements RecyclerView.OnItemTouchLis
             View child = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
             if(child != null) {
                 RecyclerView.ViewHolder viewHolder = mRecyclerView.getChildViewHolder(child);
-                onItemClick(viewHolder, viewHolder.getAdapterPosition());
+                onItemClick(mRecyclerView, viewHolder, viewHolder.getAdapterPosition());
             }
             return true;
         }
@@ -49,5 +49,5 @@ public abstract class OnItemTouchListener implements RecyclerView.OnItemTouchLis
         }
     }
 
-    public abstract void onItemClick(RecyclerView.ViewHolder viewHolder, int position);
+    public abstract void onItemClick(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int position);
 }

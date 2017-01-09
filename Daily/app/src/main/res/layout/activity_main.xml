@@ -31,24 +31,35 @@
                 android:elevation="4dp"
                 app:titleTextColor="@color/white"
                 app:navigationIcon="@drawable/menu"
-                app:title="嘻嘻"
+                app:title="@{model.mToolbarTitle}"
                 android:background="@color/colorPrimary"
-                app:theme="@style/ToolbarTheme">
+                android:theme="@style/ToolbarTheme">
 
             </android.support.v7.widget.Toolbar>
 
-            <desperado.com.daily.ui.BannerView
+            <desperado.com.daily.ui.CustomSwipeRefreshLayout
+                android:id="@+id/main_csrl_refresh"
                 android:layout_below="@+id/main_tb_toolbar"
-                android:id="@+id/main_bv_banner_view"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-
+                android:layout_height="match_parent"
                 >
 
-            </desperado.com.daily.ui.BannerView>
+                <desperado.com.daily.ui.CustomRecyclerView
+
+                    android:id="@+id/main_rv_new"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/background"
+                    app:adapter="@{model.getNewsAdapter()}"
+                    app:layout_manager="@{model.getNewsLayoutManager()}"
+                    >
+                </desperado.com.daily.ui.CustomRecyclerView>
+
+            </desperado.com.daily.ui.CustomSwipeRefreshLayout>
 
         </RelativeLayout>
 
+        
 
         <RelativeLayout
             android:id="@+id/main_rl_drawer_menu"
@@ -58,7 +69,7 @@
             android:background="#F9F9F9"
             android:clickable="false">
 
-            <android.support.v7.widget.RecyclerView
+            <desperado.com.daily.ui.CustomRecyclerView
                 android:id="@+id/main_rv_drawer_menu"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -66,7 +77,8 @@
                 android:background="#ffffff"
                 android:clickable="true"
                 app:adapter="@{model.getNavAdapter()}"
-                app:layout_manager="@{model.getNavLayoutManager()}"/>
+                app:layout_manager="@{model.getNavLayoutManager()}"
+                />
 
         </RelativeLayout>
 

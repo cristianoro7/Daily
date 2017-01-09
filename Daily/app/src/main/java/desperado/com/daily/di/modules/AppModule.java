@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import desperado.com.daily.utils.network.NetworkExecutor;
+import desperado.com.daily.utils.network.impl.NetworkDelegateImpl;
 import okhttp3.OkHttpClient;
 
 /**
@@ -16,9 +18,11 @@ import okhttp3.OkHttpClient;
 public class AppModule {
 
     private final Application mApplication;
+//    private final NetworkDelegateImpl mNetworkDelegate;
 
     public AppModule(Application mApplication) {
         this.mApplication = mApplication;
+//        this.mNetworkDelegate = networkDelegate;
     }
 
     @Singleton
@@ -31,5 +35,17 @@ public class AppModule {
     @Provides
     OkHttpClient ProvidesOkHttpClient() {
         return new OkHttpClient();
+    }
+
+    @Singleton
+    @Provides
+    NetworkDelegateImpl ProvidesNetworkDelegateImpl() {
+        return new NetworkDelegateImpl();
+    }
+
+    @Singleton
+    @Provides
+    NetworkExecutor ProvidesNetworkExecutor() {
+        return new NetworkExecutor(ProvidesNetworkDelegateImpl());
     }
 }

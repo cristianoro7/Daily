@@ -6,7 +6,7 @@ import android.util.Log;
 import desperado.com.daily.di.components.AppComponent;
 import desperado.com.daily.di.components.DaggerAppComponent;
 import desperado.com.daily.di.modules.AppModule;
-
+import desperado.com.daily.utils.network.impl.NetworkDelegateImpl;
 
 
 /**

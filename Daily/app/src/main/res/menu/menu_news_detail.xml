@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/new_share"
+        android:icon="@drawable/share"
+        android:title="share"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/new_collect"
+        android:title="收藏"
+        android:icon="@drawable/new_collect"
+        app:showAsAction="always"/>
+
+    <item
+        android:icon="@drawable/new_comment"
+        android:title="评论"
+        android:id="@+id/new_comment"
+        app:showAsAction="always|withText"/>
+
+    <item android:id="@+id/new_praise"
+        android:title="点赞"
+        android:icon="@drawable/new_praise"
+        app:showAsAction="always|withText"
+        android:actionLayout="@layout/menu_praise"/>
+
+</menu>

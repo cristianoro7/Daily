@@ -5,15 +5,13 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,26 +21,31 @@ import javax.inject.Inject;
 
 import desperado.com.daily.R;
 import desperado.com.daily.base.activity.BaseActivity;
-import desperado.com.daily.base.listener.OnItemTouchListener;
-import desperado.com.daily.bean.BannerBean;
+import desperado.com.daily.bean.LatestNewBean;
 import desperado.com.daily.bean.MenuBean;
+import desperado.com.daily.bean.NewsBeforeBean;
 import desperado.com.daily.databinding.MainActivityBinding;
 import desperado.com.daily.main.di.component.DaggerMainComponent;
 import desperado.com.daily.main.viewmodel.MainViewModel;
-import desperado.com.daily.ui.BannerView;
+import desperado.com.daily.newdetail.activity.NewDetailActivity;
+import desperado.com.daily.ui.CustomRecyclerView;
+import desperado.com.daily.utils.ConvertUtil;
 import desperado.com.daily.utils.interfacess.OnResultListener;
 
 /**
  * Created by desperado on 17-1-1.
  */
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,
+        CustomRecyclerView.OnItemClickListener, CustomRecyclerView.OnLoadMoreListener,
+        CustomRecyclerView.OnChangeTitleListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Inject
     MainViewModel mMainViewModel;
     private List<MenuBean.OthersBean> mData;
+    private List<LatestNewBean.StoriesBean> mNewsList;
     MainActivityBinding mBinding;
 
     @Override
@@ -53,77 +56,55 @@ public class MainActivity extends BaseActivity {
         initDrawableLayout(); //初始化DrawableLayout的数据
         initToolbar();
         toggleToolBarDrawer(); //将Toolbar和DrawableLayout绑定
-//        init();
-        mMainViewModel.getLatestNew(this, mBinding.mainBvBannerView, mMainViewModel);
+        initNews();
+        initRefreshLayout();
+        initListener();
     }
 
-    private void init() {
-        final List<BannerBean> bannerBeens = new ArrayList<>();
-        final BannerBean bannerBean = new BannerBean();
-        bannerBean.setImageId(R.drawable.cangjingyou);
-        bannerBean.setText("cangjingyou");
-        BannerBean bannerBean2 = new BannerBean();
-        bannerBean2.setImageId(R.drawable.cangjingyou);
-        bannerBean2.setText("cangjingyou");
-        BannerBean bannerBean3 = new BannerBean();
-        bannerBean3.setImageId(R.drawable.cangjingyou);
-        bannerBean3.setText("cangjingyou");
-        bannerBeens.add(bannerBean);
-        bannerBeens.add(bannerBean2);
-        bannerBeens.add(bannerBean3);
-        mBinding.mainBvBannerView.setBannerViewAdapter(new BannerView.BannerViewAdapter() {
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public View getView(int position) {
-                View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.item_banner_view, null);
-                ImageView imageView = (ImageView) v.findViewById(R.id.banner_iv_image);
-                TextView textView = (TextView) v.findViewById(R.id.banner_tv_text);
-                BannerBean bannerBean1 = bannerBeens.get(position);
-                textView.setText(bannerBean.getText());
-                imageView.setImageResource(bannerBean.getImageId());
-                return v;
-            }
-
-            @Override
-            public int getCount() {
-                return 3;
-            }
-        });
-    }
-
-
-    private void initDrawableLayout() {
-        //从网络上获取日报类型
-        mMainViewModel.getThemes(new OnResultListener<List<MenuBean.OthersBean>>() {
-            @Override
-            public void onResult(List<MenuBean.OthersBean> list) {
-                Log.d(TAG, "onResult: " + Thread.currentThread().getId());
-                mData = list;
-                mMainViewModel.initNavLayoutManager(LinearLayoutManager.VERTICAL, MainActivity.this);
-                mMainViewModel.initNavAdapter(mData);
-                mBinding.setModel(mMainViewModel);
-                initListener(); //为item设置点击事件
-            }
-        });
+    private void initRefreshLayout() {
+        mBinding.mainCsrlRefresh.setColorSchemeRes(R.color.colorAccent);
+        mBinding.mainCsrlRefresh.setOnRefreshListener(this);
     }
 
     private void initListener() {
-        mBinding.mainRvDrawerMenu.addOnItemTouchListener(new OnItemTouchListener(mBinding.mainRvDrawerMenu) {
+        mBinding.mainRvDrawerMenu.setOnItemClickListener(this);
+        mBinding.mainRvNew.setOnItemClickListener(this);
+        mBinding.mainRvNew.setLoadMoreListener(this, mMainViewModel.getNewsLayoutManager());
+        mBinding.mainRvNew.setOnChangeTitleListener(this);
+    }
+
+    private void initNews() {
+        mMainViewModel.initNewsLayoutManager(LinearLayoutManager.VERTICAL, MainActivity.this);
+        mMainViewModel.getNews(new OnResultListener<LatestNewBean>() {
             @Override
-            public void onItemClick(RecyclerView.ViewHolder viewHolder, int position) {
-                Toast.makeText(viewHolder.itemView.getContext(), "xixi", Toast.LENGTH_SHORT).show();
+            public void onResult(LatestNewBean latestNewBean) {
+                mMainViewModel.setmDate(latestNewBean.getDate());
+                mNewsList = new ArrayList<>();
+                mNewsList.addAll(latestNewBean.getStories());
+                mMainViewModel.initNewsAdapter(mNewsList);
+                mBinding.setModel(mMainViewModel);
+                Log.d(TAG, "onResult: " + mNewsList.toString());
+                Log.d(TAG, "onResult: in news" + Thread.currentThread().getId());
+                mBinding.mainCsrlRefresh.setRefreshings(false);
             }
+        });
 
+    }
+
+    private void initDrawableLayout() {
+        //从网络上获取日报类型
+        mMainViewModel.getThemes(new OnResultListener<MenuBean>() {
             @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
+            public void onResult(MenuBean bean) {
+                Log.d(TAG, "onResult: " + Thread.currentThread().getId());
+                mData = bean.getOthers();
+                mMainViewModel.initNavLayoutManager(LinearLayoutManager.VERTICAL, MainActivity.this);
+                mMainViewModel.initNavAdapter(mData);
+                mBinding.setModel(mMainViewModel);
             }
         });
     }
+
 
     private void initToolbar() {
         mBinding.mainTbToolbar.setTitle("首页");
@@ -141,7 +122,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 mBinding.mainDlDrawableLayout.openDrawer(mBinding.mainRlDrawerMenu);
-                mBinding.mainBvBannerView.removeAllCallBack();
             }
         });
     }
@@ -164,7 +144,7 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.drawlayout_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_drawlayout, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -175,5 +155,61 @@ public class MainActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        onRefreshs();
+    }
+
+    private void onRefreshs() {
+        mMainViewModel.getNews(new OnResultListener<LatestNewBean>() {
+            @Override
+            public void onResult(LatestNewBean latestNewBean) {
+                mNewsList.clear();
+                mMainViewModel.getNewsAdapter().notifyDataSetChanged();
+                mNewsList.addAll(latestNewBean.getStories());
+                mMainViewModel.getNewsAdapter().notifyDataSetChanged();
+                mBinding.mainCsrlRefresh.setRefreshing(false);
+            }
+        });
+    }
+
+    @Override
+    public void onClick(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int position) {
+        switch (recyclerView.getId()) {
+            case R.id.main_rv_drawer_menu:
+                Toast.makeText(MainActivity.this, "xixi", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.main_rv_new:
+                NewDetailActivity.startActivity(MainActivity.this, mNewsList.get(position).getId());
+                break;
+        }
+    }
+
+    @Override
+    public void onLoadMore(int currentPage) {
+        onLoad();
+    }
+
+    private void onLoad() {
+        String date = ConvertUtil.getBeforeDate(this, mMainViewModel.getmDate());
+        Log.d(TAG, "onLoad: " + date);
+        mMainViewModel.getNewsBefore(new OnResultListener<NewsBeforeBean>() {
+            @Override
+            public void onResult(NewsBeforeBean newsBeforeBean) {
+                List<LatestNewBean.StoriesBean> list = ConvertUtil.convertNewsBeforeBeanStoryToLatestNewsStory(
+                        newsBeforeBean.getStories()
+                );
+                mNewsList.addAll(mNewsList.size(), list);
+                mMainViewModel.getNewsAdapter().notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    public void onChange() {
+        Log.d(TAG, "onChange: ");
+        mMainViewModel.mToolbarTitle.set("xxi");
     }
 }
