@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="item"
+            type="desperado.com.daily.bean.CommentsBean"/>
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/comment_rl_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/comment_iv_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:src="@{item.avatar}" />
+
+            <TextView
+                android:id="@+id/comment_tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@id/comment_iv_image"
+                android:text="@{item.author}"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/comment_iv_vote"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="14dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/comment_vote" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="16dp"
+                android:text="@{item.likes}"
+                android:textColor="@color/grey" />
+
+            <TextView
+                android:id="@+id/comment_tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/comment_tv_name"
+                android:layout_marginLeft="65dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:text="@{item.content}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/comment_tv_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginLeft="65dp"
+                android:layout_marginTop="20dp"
+                android:text="@{item.time}"
+                android:textColor="@color/grey"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

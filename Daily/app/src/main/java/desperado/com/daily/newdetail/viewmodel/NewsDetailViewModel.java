@@ -2,9 +2,11 @@ package desperado.com.daily.newdetail.viewmodel;
 
 import android.databinding.ObservableField;
 import android.util.Log;
+import android.view.View;
 
 import desperado.com.daily.bean.NewsDetailBean;
 import desperado.com.daily.bean.NewsExtraBean;
+import desperado.com.daily.comment.activity.CommentActivity;
 import desperado.com.daily.newdetail.utils.NetworkUtil;
 import desperado.com.daily.utils.interfacess.OnResultListener;
 
@@ -15,6 +17,7 @@ import desperado.com.daily.utils.interfacess.OnResultListener;
 public class NewsDetailViewModel {
 
     private static final String TAG = NewsDetailViewModel.class.getSimpleName();
+    private int mNewsId;
     public ObservableField<String> mImageUrl = new ObservableField<>();
     public ObservableField<String> mNewTitle = new ObservableField<>();
     public ObservableField<String> mImageSource = new ObservableField<>();
@@ -38,7 +41,7 @@ public class NewsDetailViewModel {
         mBody.set(body);
     }
 
-    public void getNewsDetail(int id) {
+    public void getNewsDetail(final int id) {
         NetworkUtil.loadNewsDetailFromNetwork(id, new OnResultListener<NewsDetailBean>() {
             @Override
             public void onResult(NewsDetailBean newsDetailBean) {
@@ -46,6 +49,7 @@ public class NewsDetailViewModel {
                 setmImageSource(newsDetailBean.getImage_source());
                 setmNewTitle(newsDetailBean.getTitle());
                 setBody(newsDetailBean.getBody());
+                mNewsId = id;
                 Log.d(TAG, "onResult: image url:" + newsDetailBean.getImage());
             }
         });
@@ -59,6 +63,10 @@ public class NewsDetailViewModel {
                 mPraiseCounts.set(String.valueOf(newsExtraBean.getPopularity()));
             }
         });
+    }
+
+    public void onCommentsClick(View view) {
+        CommentActivity.startActivity(view.getContext(), mNewsId);
     }
 
 }

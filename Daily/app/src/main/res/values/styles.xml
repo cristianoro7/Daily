@@ -16,4 +16,12 @@
         <item name="android:src">@drawable/menu_more</item>
     </style>
 
+    <style name="NewsCommentToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:actionOverflowButtonStyle">@style/NewsCommentOverflowButtonStyle</item>
+    </style>
+
+    <style name="NewsCommentOverflowButtonStyle" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/comment_write</item>
+    </style>
+
 </resources>

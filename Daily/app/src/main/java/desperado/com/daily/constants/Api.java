@@ -35,4 +35,12 @@ public class Api {
     public static String buildNewsExtra(int newsId) {
         return NEWS_EXTRA + newsId;
     }
+
+    public static String buildLongCommentsUrl(int newsId) {
+        return HOST + "story/" + newsId + "/long-comments";
+    }
+
+    public static String buildShortCommentsUrl(int newsId) {
+        return HOST + "story/" + newsId + "/short-comments";
+    }
 }

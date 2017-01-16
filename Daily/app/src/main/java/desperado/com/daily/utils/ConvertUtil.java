@@ -3,6 +3,7 @@ package desperado.com.daily.utils;
 import android.content.Context;
 import android.util.Log;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,7 +12,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import desperado.com.daily.R;
+import desperado.com.daily.bean.CommentsBean;
 import desperado.com.daily.bean.LatestNewBean;
+import desperado.com.daily.bean.LongCommentsBean;
 import desperado.com.daily.bean.NewsBeforeBean;
 
 /**
@@ -47,7 +50,7 @@ public class ConvertUtil {
     public static List<LatestNewBean.StoriesBean> convertNewsBeforeBeanStoryToLatestNewsStory(
             List<NewsBeforeBean.StoriesBean> ns) {
         List<LatestNewBean.StoriesBean> list = new ArrayList<>();
-        if(ns != null) {
+        if (ns != null) {
             for (int i = 0; i < ns.size(); i++) {
                 NewsBeforeBean.StoriesBean bean = ns.get(i);
                 LatestNewBean.StoriesBean lBean = new LatestNewBean.StoriesBean();
@@ -88,6 +91,36 @@ public class ConvertUtil {
         int month = (iDate % 10000) / 100 - 1;
         int day = iDate % 100;
         return new GregorianCalendar(year, month, day).getTime();
+    }
+
+    public static List<CommentsBean> convertLongCommentsBeansToCommentBeans(LongCommentsBean longCommentsBeen) {
+        List<CommentsBean> list = null;
+        if (longCommentsBeen != null) {
+            list = new ArrayList<>();
+            List<LongCommentsBean.CommentsBean> commentsBeanList = longCommentsBeen.getComments();
+            CommentsBean commentsBean;
+            for (int i = 0; i < commentsBeanList.size(); i++) {
+                commentsBean = new CommentsBean();
+                LongCommentsBean.CommentsBean bean = commentsBeanList.get(i);
+                commentsBean.setAuthor(bean.getAuthor());
+                commentsBean.setAvatar(bean.getAvatar());
+                commentsBean.setContent(bean.getContent());
+                commentsBean.setId(bean.getId());
+                commentsBean.setLikes(String.valueOf(bean.getLikes()));
+                commentsBean.setLongCommentSize(commentsBeanList.size());
+                commentsBean.setReply_to(bean.getReply_to());
+                commentsBean.setTime(convertMillToDate(bean.getTime()));
+                list.add(commentsBean);
+            }
+        }
+        return list;
+    }
+
+    private static String convertMillToDate(long time) {
+        DateFormat format = new SimpleDateFormat("MM-dd hh:mm");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        return format.format(calendar.getTime());
     }
 
 }

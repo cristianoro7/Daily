@@ -18,6 +18,7 @@
         </activity>
         <activity android:name=".main.activity.MainActivity"/>
         <activity android:name=".newdetail.activity.NewDetailActivity"/>
+        <activity android:name=".comment.activity.CommentActivity"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

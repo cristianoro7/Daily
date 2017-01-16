@@ -88,4 +88,6 @@ public class NewDetailActivity extends BaseActivity {
     private int getNewsId() {
         return getIntent().getIntExtra(NEWS_ID, 0);
     }
+
+
 }

@@ -6,9 +6,7 @@
         <variable
             name="model"
             type="desperado.com.daily.newdetail.viewmodel.NewsDetailViewModel" />
-
     </data>
-
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -42,9 +40,11 @@
             android:id="@+id/comment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/praise">
+            android:layout_toLeftOf="@+id/praise"
+            >
 
             <ImageView
+                android:onClick="@{(v) -> model.onCommentsClick(v)}"
                 android:id="@+id/news_detail_im_comment"
                 android:layout_width="35dp"
                 android:layout_height="35dp"

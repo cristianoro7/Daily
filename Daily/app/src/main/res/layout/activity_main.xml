@@ -28,7 +28,7 @@
                 android:id="@+id/main_tb_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:elevation="4dp"
+                app:elevation="4dp"
                 app:titleTextColor="@color/white"
                 app:navigationIcon="@drawable/menu"
                 app:title="@{model.mToolbarTitle}"

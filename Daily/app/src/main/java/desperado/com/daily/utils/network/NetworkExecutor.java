@@ -13,7 +13,7 @@ import desperado.com.daily.utils.network.interfaces.INetworkDelegate;
 
 public class NetworkExecutor {
 
-    INetworkDelegate mNetworkDelegate = null;
+    private INetworkDelegate mNetworkDelegate = null;
 
     public NetworkExecutor(INetworkDelegate mNetworkDelegate) {
         this.mNetworkDelegate = mNetworkDelegate;
