@@ -6,6 +6,7 @@
 * DataBinding
 * Okhttp3
 * bolt-task
+* Picasso
 
 ### 由于项目主要用于练手,所以难免存在缺陷
 * 没有做相应的本地缓存
