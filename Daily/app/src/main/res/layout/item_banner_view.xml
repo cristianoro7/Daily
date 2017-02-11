@@ -4,7 +4,7 @@
     <data class="BannerViewBinding">
         <variable
             name="BannerModel"
-            type="desperado.com.daily.main.viewmodel.MainViewModel"/>
+            type="desperado.com.daily.presentation.main.viewmodel.MainViewModel"/>
     </data>
 
     <RelativeLayout

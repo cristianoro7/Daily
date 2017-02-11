@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout >
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="item"
-            type="desperado.com.daily.bean.LatestNewBean.StoriesBean" />
+            type="desperado.com.daily.data.bean.LatestNewBean.StoriesBean" />
     </data>
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,31 +20,48 @@
         card_view:cardElevation="4dp">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/new_tv_text"
                 android:layout_width="0dp"
-                android:layout_weight="0.7"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
+                android:layout_weight="0.7"
                 android:text="@{item.title}"
                 android:textColor="@color/textColor"
-                android:textSize="17sp"
-                />
+                android:textSize="17sp" />
 
-            <ImageView
-                android:id="@+id/new_iv_iamge"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_alignParentRight="true"
-                android:layout_margin="10dp"
-                android:scaleType="centerCrop"
-                android:src="@{item.images.get(0)}" />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3">
+
+                <ImageView
+                    android:id="@+id/new_iv_iamge"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@{item.images.get(0)}" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="7dp"
+                    android:layout_marginRight="7dp"
+                    android:src="@drawable/main_muti_pic"
+                    android:visibility="@{item.multipic ? View.VISIBLE : View.GONE}" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 

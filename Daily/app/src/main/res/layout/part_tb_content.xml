@@ -5,7 +5,7 @@
 
         <variable
             name="model"
-            type="desperado.com.daily.newdetail.viewmodel.NewsDetailViewModel" />
+            type="desperado.com.daily.presentation.newdetail.viewmodel.NewsDetailViewModel" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -44,8 +44,7 @@
             >
 
             <ImageView
-                android:onClick="@{(v) -> model.onCommentsClick(v)}"
-                android:id="@+id/news_detail_im_comment"
+                android:id="@+id/news_detail_iv_comment"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"

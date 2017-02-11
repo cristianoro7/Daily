@@ -4,7 +4,7 @@
     <data class="NewsDetailBinding">
         <variable
             name="model"
-            type="desperado.com.daily.newdetail.viewmodel.NewsDetailViewModel"/>
+            type="desperado.com.daily.presentation.newdetail.viewmodel.NewsDetailViewModel"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -69,7 +69,8 @@
                     app:title="">
 
                     <include layout="@layout/part_tb_content"
-                        app:model="@{model}"/>
+                        app:model="@{model}"
+                        android:id="@+id/new_detail_rl_content"/>
 
                 </android.support.v7.widget.Toolbar>
 

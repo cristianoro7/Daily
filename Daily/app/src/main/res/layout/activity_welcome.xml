@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="desperado.com.daily.welcome.viewmodel.WelcomeViewModel" />
+            type="desperado.com.daily.presentation.welcome.viewmodel.WelcomeViewModel" />
     </data>
 
     <RelativeLayout

@@ -4,7 +4,7 @@
     <data>
         <variable
             name="item"
-            type="desperado.com.daily.bean.MenuBean.OthersBean"/>
+            type="desperado.com.daily.data.bean.ThemeListBean"/>
     </data>
 
     <LinearLayout

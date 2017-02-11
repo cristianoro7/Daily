@@ -5,7 +5,7 @@
 
         <variable
             name="item"
-            type="desperado.com.daily.bean.LatestNewBean.StoriesBean" />
+            type="desperado.com.daily.data.bean.LatestNewBean.StoriesBean" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

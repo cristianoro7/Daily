@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data class="MainActivityBinding">
 
         <variable
             name="model"
-            type="desperado.com.daily.main.viewmodel.MainViewModel"/>
+            type="desperado.com.daily.presentation.main.viewmodel.MainViewModel" />
 
     </data>
 
@@ -19,47 +19,11 @@
         tools:openDrawer="start">
 
         <!--<include layout="@layout/part_main_content"-->
-            <!--android:id="@+id/part_main_content"/>-->
-        <RelativeLayout
+        <!--android:id="@+id/part_main_content"/>-->
+        <FrameLayout
+            android:id="@+id/main_fl_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/main_tb_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:elevation="4dp"
-                app:titleTextColor="@color/white"
-                app:navigationIcon="@drawable/menu"
-                app:title="@{model.mToolbarTitle}"
-                android:background="@color/colorPrimary"
-                android:theme="@style/ToolbarTheme">
-
-            </android.support.v7.widget.Toolbar>
-
-            <desperado.com.daily.ui.CustomSwipeRefreshLayout
-                android:id="@+id/main_csrl_refresh"
-                android:layout_below="@+id/main_tb_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-
-                <desperado.com.daily.ui.CustomRecyclerView
-
-                    android:id="@+id/main_rv_new"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/background"
-                    app:adapter="@{model.getNewsAdapter()}"
-                    app:layout_manager="@{model.getNewsLayoutManager()}"
-                    >
-                </desperado.com.daily.ui.CustomRecyclerView>
-
-            </desperado.com.daily.ui.CustomSwipeRefreshLayout>
-
-        </RelativeLayout>
-
-        
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:id="@+id/main_rl_drawer_menu"
@@ -69,7 +33,7 @@
             android:background="#F9F9F9"
             android:clickable="false">
 
-            <desperado.com.daily.ui.CustomRecyclerView
+            <desperado.com.daily.presentation.ui.CustomRecyclerView
                 android:id="@+id/main_rv_drawer_menu"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -77,8 +41,7 @@
                 android:background="#ffffff"
                 android:clickable="true"
                 app:adapter="@{model.getNavAdapter()}"
-                app:layout_manager="@{model.getNavLayoutManager()}"
-                />
+                app:layout_manager="@{model.getNavLayoutManager()}" />
 
         </RelativeLayout>
 

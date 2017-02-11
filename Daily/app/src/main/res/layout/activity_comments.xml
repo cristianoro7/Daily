@@ -3,7 +3,7 @@
     <data class="CommentsBinding">
         <variable
             name="model"
-            type="desperado.com.daily.comment.viewmodel.CommentViewModel"/>
+            type="desperado.com.daily.presentation.comment.viewmodel.CommentViewModel"/>
     </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,15 +18,16 @@
             android:background="@color/colorPrimary"
             app:popupTheme="@style/NewsCommentToolbarTheme"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="xixi"
+            app:title="@{model.mTitle}"
             app:titleTextColor="@color/white"/>
 
-        <desperado.com.daily.ui.CustomRecyclerView
+        <desperado.com.daily.presentation.ui.CustomRecyclerView
             android:id="@+id/comment_rv_comments"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:adapter="@{model.getCommentAdapter()}"
-            app:layout_manager="@{model.getLayoutManager()}"/>
+            app:layout_manager="@{model.getLayoutManager()}"
+            app:animator="@{model.getAnimator()}"/>
 
     </LinearLayout>
 </layout>

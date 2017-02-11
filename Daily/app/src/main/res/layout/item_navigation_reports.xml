@@ -2,32 +2,33 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="item"
-            type="desperado.com.daily.bean.MenuBean.OthersBean"/>
+            type="desperado.com.daily.data.bean.ThemeListBean" />
     </data>
 
     <RelativeLayout
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
         android:clickable="true">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:text="@{item.name}"
-            android:textSize="15sp"
             android:textColor="@color/textColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textSize="15sp" />
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/add"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
             android:layout_marginTop="12dp"
-            android:layout_marginRight="30dp"/>
+            android:src="@drawable/add" />
 
     </RelativeLayout>
 

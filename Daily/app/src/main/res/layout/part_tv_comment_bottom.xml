@@ -5,7 +5,7 @@
 
         <variable
             name="item"
-            type="desperado.com.daily.bean.CommentsBean" />
+            type="desperado.com.daily.data.bean.CommentsBean" />
 
     </data>
 
@@ -13,7 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true">
 
         <TextView
             android:layout_width="match_parent"

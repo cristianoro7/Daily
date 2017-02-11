@@ -2,9 +2,10 @@
 <layout>
 
     <data>
+
         <variable
             name="item"
-            type="desperado.com.daily.bean.CommentsBean"/>
+            type="desperado.com.daily.data.bean.CommentsBean" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -62,9 +63,11 @@
                 android:layout_marginLeft="65dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="20dp"
-                android:text="@{item.content}" />
+                android:maxLines="25"
+                android:text="@{item.reply_to != null ? item.content + `\n` + `回复://` + item.reply_to.author + `:` + item.reply_to.content : item.content}" />
 
             <TextView
+                android:id="@+id/comment_tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/comment_tv_content"
@@ -74,6 +77,17 @@
                 android:text="@{item.time}"
                 android:textColor="@color/grey"
                 android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/comment_iv_vote"
+                android:layout_marginTop="58dp"
+                android:layout_toLeftOf="@id/comment_iv_vote"
+                android:gravity="center_horizontal"
+                android:text="展开"
+                android:textColor="@color/colorPrimary"
+                android:visibility="gone" />
 
         </RelativeLayout>
     </LinearLayout>
