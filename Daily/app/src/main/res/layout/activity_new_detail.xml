@@ -1,95 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:bind="http://schemas.android.com/tools">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data class="NewsDetailBinding">
-        <variable
-            name="model"
-            type="desperado.com.daily.presentation.newdetail.viewmodel.NewsDetailViewModel"/>
-    </data>
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/news_detail_abl_appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="256dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/news_detail_abl_appbar"
-            android:layout_width="match_parent"
-            android:layout_height="256dp"
-            android:fitsSystemWindows="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/toolbar_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:contentScrim="?attr/colorPrimary"
-
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
-                <ImageView
-                    android:id="@+id/news_detail_iv_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fitsSystemWindows="true"
-                    android:scaleType="centerCrop"
-                    app:layout_collapseMode="parallax"
-                    android:src="@{model.mImageUrl}"/>
-
-                <TextView
-                    android:id="@+id/news_detail_tv_image_source"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginBottom="12dp"
-                    android:layout_marginRight="16dp"
-                    android:textSize="12sp"
-                    app:layout_collapseMode="pin"
-                    android:text="@{model.mImageSource}"/>
-
-                <TextView
-                    android:id="@+id/news_detail_tv_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|left"
-                    android:layout_marginBottom="36dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="22sp"
-                    app:layout_collapseMode="pin"
-                    android:text="@{model.mNewTitle}"/>
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/news_detail_tb_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:title="">
-
-                    <include layout="@layout/part_tb_content"
-                        app:model="@{model}"
-                        android:id="@+id/new_detail_rl_content"/>
-
-                </android.support.v7.widget.Toolbar>
-
-            </android.support.design.widget.CollapsingToolbarLayout>
-
-        </android.support.design.widget.AppBarLayout>
-
-        <android.support.v4.widget.NestedScrollView
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:contentScrim="?attr/colorPrimary"
 
-            <WebView
-                android:id="@+id/new_detail_wv_web_view"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <ImageView
+                android:id="@+id/news_detail_iv_image"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax" />
+
+            <TextView
+                android:id="@+id/news_detail_tv_image_source"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:load_data="@{model.mBody}"/>
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="12dp"
+                android:layout_marginRight="16dp"
+                android:textSize="12sp"
+                app:layout_collapseMode="pin" />
 
-        </android.support.v4.widget.NestedScrollView>
+            <TextView
+                android:id="@+id/news_detail_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_marginBottom="36dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                app:layout_collapseMode="pin" />
 
-    </android.support.design.widget.CoordinatorLayout>
-</layout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/news_detail_tb_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:title="">
+
+                <include
+                    android:id="@+id/new_detail_rl_content"
+                    layout="@layout/part_tb_content"/>
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <WebView
+            android:id="@+id/new_detail_wv_web_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

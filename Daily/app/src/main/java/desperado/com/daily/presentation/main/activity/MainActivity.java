@@ -2,24 +2,29 @@ package desperado.com.daily.presentation.main.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.RelativeLayout;
+
+import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import butterknife.BindView;
 import desperado.com.daily.R;
-import desperado.com.daily.databinding.MainActivityBinding;
+import desperado.com.daily.data.bean.ThemeListBean;
 import desperado.com.daily.presentation.base.activity.BaseActivity;
 import desperado.com.daily.presentation.di.components.DaggerMainActivityComponent;
 import desperado.com.daily.presentation.di.components.MainActivityComponent;
+import desperado.com.daily.presentation.main.adapter.NavigationAdapter;
 import desperado.com.daily.presentation.main.fragment.LatestFragment;
-import desperado.com.daily.presentation.main.viewmodel.MainViewModel;
+import desperado.com.daily.presentation.main.presenter.MainContract;
+import desperado.com.daily.presentation.main.presenter.MainPresenter;
 import desperado.com.daily.presentation.themes.fragment.ThemeFragment;
 import desperado.com.daily.presentation.ui.CustomRecyclerView;
 
@@ -27,23 +32,53 @@ import desperado.com.daily.presentation.ui.CustomRecyclerView;
  * Created by desperado on 17-1-1.
  */
 
-public class MainActivity extends BaseActivity implements CustomRecyclerView.OnItemClickListener {
+public class MainActivity extends BaseActivity implements CustomRecyclerView.OnItemClickListener,
+        MainContract.View {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Inject
-    MainViewModel mMainViewModel;
-    MainActivityBinding mBinding;
+    MainPresenter mMainPresenter;
+    @Inject
+    @Named("NavigationLayoutManager")
+    LinearLayoutManager mManager;
+    @Inject
+    NavigationAdapter mNavAdapter;
+
+    @BindView(R.id.main_rv_drawer_menu)
+    CustomRecyclerView mNavRecyclerView;
+    @BindView(R.id.main_dl_drawable_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.main_rl_drawer_menu)
+    RelativeLayout mRelativeLayout;
+
     private Fragment mLatestFragment, mThemesFragment;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        inject();
-        initDrawableLayout(); //初始化DrawableLayout的数据
-        inFragment();
+    public void init() {
+        initDrawableLayout();
+        initFragment();
         initListener();
+    }
+
+    @Override
+    protected void onInject() {
+        inject();
+    }
+
+    @Override
+    public void onBindView() {
+        mMainPresenter.onStart(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        mMainPresenter.onDestroy();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
 
     private void inject() {
@@ -51,10 +86,10 @@ public class MainActivity extends BaseActivity implements CustomRecyclerView.OnI
     }
 
     private void initListener() {
-        mBinding.mainRvDrawerMenu.setOnItemClickListener(this);
+        mNavRecyclerView.setOnItemClickListener(this);
     }
 
-    private void inFragment() {
+    private void initFragment() {
         mLatestFragment = getSupportFragmentManager().findFragmentByTag(LatestFragment.class.getSimpleName());
         if (mLatestFragment == null) {
             mLatestFragment = LatestFragment.newInstance();
@@ -63,16 +98,15 @@ public class MainActivity extends BaseActivity implements CustomRecyclerView.OnI
     }
 
     private void initDrawableLayout() {
-        mMainViewModel.initNavLayoutManager(LinearLayoutManager.VERTICAL, MainActivity.this);
-        mMainViewModel.initNavAdapter(mMainViewModel.getmThemesList());
-        mBinding.setModel(mMainViewModel);
-        mMainViewModel.getThemes();
+        mNavRecyclerView.setLayoutManager(mManager);
+        mNavRecyclerView.setAdapter(mNavAdapter);
+        mMainPresenter.getThemes();
     }
 
     @Override
     public void onBackPressed() {
-        if (mBinding.mainDlDrawableLayout.isDrawerOpen(mBinding.mainRlDrawerMenu)) {
-            mBinding.mainDlDrawableLayout.closeDrawer(mBinding.mainRlDrawerMenu);
+        if (mDrawerLayout.isDrawerOpen(mRelativeLayout)) {
+            closeDrawableMenu();
         } else {
             super.onBackPressed();
         }
@@ -87,7 +121,8 @@ public class MainActivity extends BaseActivity implements CustomRecyclerView.OnI
                 showFragment(mLatestFragment);
                 break;
             default:
-                mThemesFragment = ThemeFragment.getInstance(mMainViewModel.getmThemesList().get(position - 2).getId());
+                mThemesFragment = ThemeFragment.getInstance(
+                        mMainPresenter.getThemeList().get(position - 2).getId());
                 manageFragment(mThemesFragment);
                 break;
         }
@@ -95,11 +130,11 @@ public class MainActivity extends BaseActivity implements CustomRecyclerView.OnI
     }
 
     private void closeDrawableMenu() {
-        mBinding.mainDlDrawableLayout.closeDrawer(mBinding.mainRlDrawerMenu);
+        mDrawerLayout.closeDrawer(mRelativeLayout);
     }
 
-    public MainActivityBinding getMainActivityBinding() {
-        return mBinding;
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
     }
 
     private void manageFragment(Fragment fragment) {
@@ -120,8 +155,8 @@ public class MainActivity extends BaseActivity implements CustomRecyclerView.OnI
         return new Intent(context, MainActivity.class);
     }
 
-    public MainViewModel getMainViewModel() {
-        return mMainViewModel;
+    public RelativeLayout getDrawerMenu() {
+        return mRelativeLayout;
     }
 
     public MainActivityComponent getMainActivityComponent() {
@@ -129,5 +164,20 @@ public class MainActivity extends BaseActivity implements CustomRecyclerView.OnI
                 .appComponent(getAppComponent())
                 .activityModule(getActivityModule())
                 .build();
+    }
+
+    @Override
+    public void onDialogDismess() {
+
+    }
+
+    @Override
+    public void onShowDialog() {
+
+    }
+
+    @Override
+    public void refreshNavigationUi(List<ThemeListBean> listBean) {
+        mNavAdapter.notifiedDataSetChange(listBean);
     }
 }

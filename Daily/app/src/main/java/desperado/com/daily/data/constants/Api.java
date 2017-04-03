@@ -10,16 +10,17 @@ import android.util.Log;
 
 public class Api {
 
-    private static final String TAG = Api.class.getSimpleName();
-    private static final String HOST = "https:news-at.zhihu.com/api/4/";
+    public static final String TAG = Api.class.getSimpleName();
+    public static final String HOST = "https:news-at.zhihu.com/api/4/";
     public static final String START_IMAGE = HOST + "start-image/1000*1000";
-    public static final String THEMES = HOST + "themes";
-    public static final String LATEST_NEW = HOST + "news/latest";
-    private static final String NEWS_DETAIL = HOST + "news/";
-    private static final String NEWS_BEFORE = HOST + "news/before/";
-    private static final String NEWS_EXTRA = HOST + "story-extra/";
-    private static final String THEMES_CONTENT = HOST + "theme/";
-
+    public static final String THEMES = "themes";
+    public static final String LATEST_NEW = "news/latest";
+    public static final String NEWS_DETAIL = "news/{newId}";
+    public static final String NEWS_BEFORE = "news/before/{date}";
+    public static final String NEWS_EXTRA = "story-extra/{newId}";
+    public static final String THEMES_CONTENT = "theme/{themeId}";
+    public static final String LONG_COMMENT = "story/{newId}/long-comments";
+    public static final String SHORT_COMMENT = "story/{newId}/short-comments";
     /**
      * 根据屏幕尺寸获取欢迎界面的图片尺寸
      * @param point 屏幕大小

@@ -1,47 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data class="LatestBinding">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-        <variable
-            name="model"
-            type="desperado.com.daily.presentation.main.viewmodel.MainViewModel" />
-    </data>
-
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_tb_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ToolbarTheme"
+        app:elevation="4dp"
+        app:navigationIcon="@drawable/menu"
+        app:title=""
+        app:titleTextColor="@color/white">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/main_tb_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:theme="@style/ToolbarTheme"
-            app:elevation="4dp"
-            app:navigationIcon="@drawable/menu"
-            app:title=""
-            app:titleTextColor="@color/white">
+    </android.support.v7.widget.Toolbar>
 
-        </android.support.v7.widget.Toolbar>
+    <desperado.com.daily.presentation.ui.CustomSwipeRefreshLayout
+        android:id="@+id/main_csrl_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_tb_toolbar">
 
-        <desperado.com.daily.presentation.ui.CustomSwipeRefreshLayout
-            android:id="@+id/main_csrl_refresh"
+        <desperado.com.daily.presentation.ui.CustomRecyclerView
+
+            android:id="@+id/main_rv_new"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/main_tb_toolbar">
+            android:background="@color/background"/>
 
-            <desperado.com.daily.presentation.ui.CustomRecyclerView
+    </desperado.com.daily.presentation.ui.CustomSwipeRefreshLayout>
 
-                android:id="@+id/main_rv_new"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background"
-                app:adapter="@{model.getNewsAdapter()}"
-                app:layout_manager="@{model.getNewsLayoutManager()}"/>
-
-        </desperado.com.daily.presentation.ui.CustomSwipeRefreshLayout>
-
-    </RelativeLayout>
-</layout>
+</RelativeLayout>

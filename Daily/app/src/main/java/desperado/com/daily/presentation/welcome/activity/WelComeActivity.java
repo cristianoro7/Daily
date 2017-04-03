@@ -1,42 +1,61 @@
 package desperado.com.daily.presentation.welcome.activity;
 
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.Nullable;
-import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import desperado.com.daily.R;
-import desperado.com.daily.databinding.WelcomeActivityBinding;
+import desperado.com.daily.data.bean.WelcomeBean;
+import desperado.com.daily.data.constants.ResultCode;
 import desperado.com.daily.presentation.base.activity.BaseActivity;
 import desperado.com.daily.presentation.di.components.DaggerWelcomeActivityComponent;
-import desperado.com.daily.presentation.welcome.viewmodel.WelcomeViewModel;
+import desperado.com.daily.presentation.utils.PicassoHelper;
+import desperado.com.daily.presentation.welcome.presenter.WelcomeContract;
+import desperado.com.daily.presentation.welcome.presenter.WelcomePresenter;
 
 /**
  * Created by desperado on 16-12-31.
  * 欢迎界面
  */
 
-public class WelComeActivity extends BaseActivity {
+public class WelComeActivity extends BaseActivity implements WelcomeContract.View {
 
     private static final String TAG = WelComeActivity.class.getSimpleName();
 
+    @BindView(R.id.welcome_iv_image)
+    ImageView mIvImage;
+    @BindView(R.id.welcome_tv_image_source)
+    TextView mTvImageSource;
+
     @Inject
-    WelcomeViewModel mWelcomeViewModel = null;
+    WelcomePresenter mWelcomePresenter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        WelcomeActivityBinding welcome = DataBindingUtil.setContentView(this, R.layout.activity_welcome);
-        inject(); //注入依赖
-        welcome.setModel(mWelcomeViewModel);
-        mWelcomeViewModel.getImageInfo();
-        handler.sendEmptyMessageDelayed(1, 3000);
+    public void init() {
+        getImage();
+    }
 
+    @Override
+    protected void onInject() {
+        inject(); //注入依赖
+    }
+
+    @Override
+    public void onBindView() {
+        mWelcomePresenter.onStart(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        mWelcomePresenter.onDestroy();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_welcome;
     }
 
     private void inject() {
@@ -47,17 +66,35 @@ public class WelComeActivity extends BaseActivity {
                 .inject(this);
     }
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            mNavigator.navigateToMainActivity(WelComeActivity.this);
-            finish();
-        }
-    };
+    @Override
+    public void onDialogDismess() {
+
+    }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        handler.removeMessages(1);
+    public void onShowDialog() {
+
     }
+
+    @Override
+    public void showImageForResult(WelcomeBean welcomeBean, int resultCode) {
+        if(resultCode == ResultCode.ON_SUCCESS) {
+            PicassoHelper.loadImageBySimplyWay(this, welcomeBean.getImg(), mIvImage);
+        } else if(resultCode == ResultCode.ON_NETWORK_ERROR) {
+            Toast.makeText(this, "获取启动页面图片失败", Toast.LENGTH_SHORT).show();
+        }
+        mWelcomePresenter.navigateToMainActivityByDelay(); //延迟3秒进入主程序
+    }
+
+    @Override
+    public void getImage() {
+        mWelcomePresenter.getImage();
+    }
+
+    @Override
+    public void navigateToMainActivity() {
+        getNavigator().navigateToMainActivity(this);
+        finish();
+    }
+
 }

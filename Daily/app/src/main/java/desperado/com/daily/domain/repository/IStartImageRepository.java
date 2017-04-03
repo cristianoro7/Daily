@@ -1,7 +1,7 @@
 package desperado.com.daily.domain.repository;
 
 import desperado.com.daily.data.bean.WelcomeBean;
-import desperado.com.daily.data.utils.interfacess.OnResultListener;
+import rx.Observable;
 
 /**
  * Created by desperado on 17-1-31.
@@ -9,5 +9,5 @@ import desperado.com.daily.data.utils.interfacess.OnResultListener;
 
 public interface IStartImageRepository {
 
-    void getStartImage(OnResultListener<WelcomeBean> listener);
+    public Observable<WelcomeBean> getStartImage();
 }

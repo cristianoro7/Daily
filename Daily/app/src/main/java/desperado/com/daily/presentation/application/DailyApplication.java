@@ -13,12 +13,17 @@ import desperado.com.daily.presentation.di.modules.AppModule;
  */
 
 public class DailyApplication extends Application {
+
     private static final String TAG = DailyApplication.class.getSimpleName();
     private static AppComponent mAppComponent = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        inject();
+    }
+
+    private void inject() {
         if (mAppComponent == null) {
             mAppComponent = DaggerAppComponent.builder()
                     .appModule(new AppModule(this))

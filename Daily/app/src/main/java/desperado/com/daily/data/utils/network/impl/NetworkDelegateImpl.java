@@ -1,7 +1,6 @@
 package desperado.com.daily.data.utils.network.impl;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import desperado.com.daily.data.utils.network.interfaces.INetworkDelegate;
 import okhttp3.OkHttpClient;
@@ -9,7 +8,6 @@ import okhttp3.OkHttpClient;
 /**
  * Created by desperado on 17-1-6.
  */
-@Singleton
 public class NetworkDelegateImpl implements INetworkDelegate {
 
     private OkHttpClient client;

@@ -1,18 +1,18 @@
 package desperado.com.daily.data.repository;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import desperado.com.daily.data.bean.LongCommentsBean;
 import desperado.com.daily.data.bean.ShortCommentsBean;
 import desperado.com.daily.data.repository.source.factory.CommentFactory;
-import desperado.com.daily.data.utils.interfacess.OnResultListener;
 import desperado.com.daily.domain.repository.ICommentRepository;
+import desperado.com.daily.presentation.di.PerActivity;
+import rx.Observable;
 
 /**
  * Created by desperado on 17-2-3.
  */
-@Singleton
+@PerActivity
 public class CommentRepository implements ICommentRepository {
 
     private CommentFactory factory;
@@ -23,12 +23,12 @@ public class CommentRepository implements ICommentRepository {
     }
 
     @Override
-    public void getLongComment(int newsId, OnResultListener<LongCommentsBean> longCommentsBeanOnResultListener) {
-        factory.getCommentDataStore().getLongComment(newsId, longCommentsBeanOnResultListener);
+    public Observable<ShortCommentsBean> getShortComment(int newsId) {
+        return factory.getCommentDataStore().getShortComment(newsId);
     }
 
     @Override
-    public void getShortComment(int newsId, OnResultListener<ShortCommentsBean> listener) {
-        factory.getCommentDataStore().getShortComment(newsId, listener);
+    public Observable<LongCommentsBean> getLongComment(int newsId) {
+        return factory.getCommentDataStore().getLongComment(newsId);
     }
 }

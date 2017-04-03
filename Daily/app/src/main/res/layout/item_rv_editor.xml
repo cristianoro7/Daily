@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
 
-    <data>
-
-        <variable
-            name="item"
-            type="desperado.com.daily.data.bean.ThemesBean.EditorsBean" />
-    </data>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@{item.avatar}"
-            android:layout_margin="5dp"/>
-    </LinearLayout>
-</layout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/editor_iv_avatar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_margin="5dp"/>
+</LinearLayout>

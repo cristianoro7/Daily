@@ -5,16 +5,19 @@ import java.util.List;
 import desperado.com.daily.data.bean.LatestNewBean;
 import desperado.com.daily.data.bean.NewsBeforeBean;
 import desperado.com.daily.data.bean.ThemeListBean;
-import desperado.com.daily.data.utils.interfacess.OnResultListener;
+import desperado.com.daily.data.bean.ThemesBean;
+import rx.Observable;
 
 /**
  * Created by desperado on 17-1-31.
  */
 
 public interface MainDataStore {
-    void getThemeList(OnResultListener<List<ThemeListBean>> listBeanOnResultListener);
+    Observable<List<ThemeListBean>> getThemeList();
 
-    void getLatestNews(OnResultListener<LatestNewBean> listOnResultListener);
+    Observable<LatestNewBean> getLatestNews();
 
-    void getNewsBefore(String date, OnResultListener<NewsBeforeBean> listener);
+    Observable<NewsBeforeBean> getNewsBefore(String date);
+
+    Observable<ThemesBean> getThemeContent(int themeId);
 }

@@ -3,20 +3,20 @@ package desperado.com.daily.data.repository;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import desperado.com.daily.data.bean.LatestNewBean;
 import desperado.com.daily.data.bean.NewsBeforeBean;
 import desperado.com.daily.data.bean.ThemeListBean;
+import desperado.com.daily.data.bean.ThemesBean;
 import desperado.com.daily.data.repository.source.factory.MainFactory;
-
-import desperado.com.daily.data.utils.interfacess.OnResultListener;
 import desperado.com.daily.domain.repository.IMainRepository;
+import desperado.com.daily.presentation.di.PerActivity;
+import rx.Observable;
 
 /**
  * Created by desperado on 17-1-31.
  */
-@Singleton
+@PerActivity
 public class MainRepository implements IMainRepository {
 
     private MainFactory mainFactory;
@@ -26,18 +26,25 @@ public class MainRepository implements IMainRepository {
         this.mainFactory = factory;
     }
 
+
     @Override
-    public void getThemeList(OnResultListener<List<ThemeListBean>> listBeanOnResultListener) {
-        mainFactory.getThemeListStore().getThemeList(listBeanOnResultListener);
+    public Observable<List<ThemeListBean>> getThemeList() {
+        return mainFactory.getThemeListStore().getThemeList();
     }
 
     @Override
-    public void getNews(OnResultListener<LatestNewBean> listOnResultListener) {
-        mainFactory.getLatestNewsRemoteStore().getLatestNews(listOnResultListener);
+    public Observable<LatestNewBean> getNews() {
+        return mainFactory.getLatestNewsRemoteStore().getLatestNews();
     }
 
     @Override
-    public void getNewsBefore(String date, OnResultListener<NewsBeforeBean> listener) {
-        mainFactory.getNewsBeforeStore().getNewsBefore(date, listener);
+    public Observable<NewsBeforeBean> getNewsBefore(String date) {
+        return mainFactory.getNewsBeforeStore().getNewsBefore(date);
     }
+
+    @Override
+    public Observable<ThemesBean> getThemeContent(int themeId) {
+        return mainFactory.getThemeContentStore().getThemeContent(themeId);
+    }
+
 }

@@ -2,38 +2,40 @@ package desperado.com.daily.presentation.main.adapter;
 
 import java.util.List;
 
-import desperado.com.daily.BR;
 import desperado.com.daily.R;
 import desperado.com.daily.data.bean.ThemeListBean;
-import desperado.com.daily.presentation.base.Adapter.BaseAdapter;
-import desperado.com.daily.presentation.base.viewholder.BaseViewHolder;
+import desperado.com.daily.presentation.base.Adapter.MultipleBaseAdapter;
 
 /**
  * Created by desperado on 17-1-1.
  */
 
-public class NavigationAdapter extends BaseAdapter<ThemeListBean> {
+public class NavigationAdapter extends MultipleBaseAdapter<ThemeListBean> {
 
     private static final int ITEM_HEADER = 0;
     private static final int ITEM_HOME = 1;
     private static final int ITEM_NORMAL = 2;
 
-    public NavigationAdapter(List<ThemeListBean> mData) {
-        super(mData);
+    public NavigationAdapter(List<ThemeListBean> data) {
+        super(data);
     }
 
     @Override
-    protected int getLayoutId(int type) {
-        return type;
+    protected int getCount() {
+        return mData == null ? 0 : mData.size() + 2;
     }
 
     @Override
-    protected int getVariableId() {
-        return BR.item;
+    protected void onBindView(MultipleBaseViewHolder holder, int position) {
+        if (position == 0 || position == 1) {
+            return;
+        }
+        initView(holder, position);
     }
 
+
     @Override
-    public int getItemViewType(int position) {
+    protected int getItemTypeId(int position) {
         switch (position) {
             case ITEM_HEADER:
                 return R.layout.item_navigation_header;
@@ -43,19 +45,13 @@ public class NavigationAdapter extends BaseAdapter<ThemeListBean> {
         return R.layout.item_navigation_reports;
     }
 
-    @Override
-    public int getItemCount() {
-        return mData == null ? 0 : mData.size() + 2;
+    private void initView(MultipleBaseViewHolder holder, int position) {
+        ThemeListBean bean = mData.get(position - 2);
+        holder.getTextViewById(holder.itemView, R.id.navigation_tv_theme).setText(bean.getName());
     }
 
-    @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        if (position == 1 || position == 0) {
-            return;
-        } else {
-            ThemeListBean b = mData.get(position - 2);
-            holder.getBinding().setVariable(getVariableId(), b);
-            holder.getBinding().executePendingBindings();
-        }
+    public void notifiedDataSetChange(List<ThemeListBean> listBeen) {
+        mData = listBeen;
+        notifyDataSetChanged();
     }
 }

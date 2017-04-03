@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import javax.inject.Inject;
-
 import desperado.com.daily.data.bean.NewsExtraBean;
 import desperado.com.daily.presentation.comment.activity.CommentActivity;
 import desperado.com.daily.presentation.main.activity.MainActivity;
@@ -16,7 +14,6 @@ import desperado.com.daily.presentation.newdetail.activity.NewDetailActivity;
  */
 public class Navigator {
 
-    @Inject
     public Navigator() {
     }
 

@@ -5,7 +5,6 @@ import android.util.Log;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -18,7 +17,6 @@ import static bolts.Task.callInBackground;
 /**
  * Created by desperado on 17-1-6.
  */
-@Singleton
 public class NetworkExecutor {
 
     private INetworkDelegate mNetworkDelegate = null;

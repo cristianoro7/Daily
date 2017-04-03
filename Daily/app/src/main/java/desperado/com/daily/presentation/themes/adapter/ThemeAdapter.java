@@ -2,39 +2,75 @@ package desperado.com.daily.presentation.themes.adapter;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.widget.ImageView;
 
 import java.util.List;
 
-
-import desperado.com.daily.BR;
 import desperado.com.daily.R;
-import desperado.com.daily.presentation.base.Adapter.BaseAdapter;
-import desperado.com.daily.presentation.base.viewholder.BaseViewHolder;
 import desperado.com.daily.data.bean.ThemesBean;
+import desperado.com.daily.presentation.base.Adapter.MultipleBaseAdapter;
+import desperado.com.daily.presentation.utils.PicassoHelper;
 
 /**
  * Created by desperado on 17-1-22.
  */
 
-public class ThemeAdapter extends BaseAdapter<ThemesBean> {
+public class ThemeAdapter extends MultipleBaseAdapter<ThemesBean> {
 
     public ThemeAdapter(List<ThemesBean> mData) {
         super(mData);
     }
 
     @Override
-    protected int getLayoutId(int type) {
-        return type;
+    protected int getCount() {
+        return mData == null ? 0 : mData.get(0).getStories().size() + 2;
     }
 
     @Override
-    protected int getVariableId() {
-        return BR.item;
+    protected void onBindView(MultipleBaseViewHolder holder, int position) {
+        initView(holder, position);
+    }
+
+    private void initView(MultipleBaseViewHolder holder, int position) {
+        ThemesBean bean = mData.get(0);
+        if (position == 0) {
+            initHeaderView(holder, bean);
+        } else if (position == 1) {
+            initEditorView(holder, bean.getEditors());
+        } else {
+            initStoryView(holder, bean.getStories(), position - 2);
+        }
+    }
+
+    private void initStoryView(MultipleBaseViewHolder holder, List<ThemesBean.StoriesBean> stories,
+                               int posution) {
+        ThemesBean.StoriesBean storiesBean = stories.get(posution);
+        if (storiesBean.getImages() != null) {
+            ImageView imageView = holder.getImageViewById(holder.itemView, R.id.new_iv_image);
+            PicassoHelper.loadImageBySimplyWay(holder.itemView.getContext(),
+                    storiesBean.getImages().get(0),
+                    imageView);
+        }
+        holder.getTextViewById(holder.itemView, R.id.new_tv_text).setText(storiesBean.getTitle());
+    }
+
+    private void initEditorView(MultipleBaseViewHolder holder, List<ThemesBean.EditorsBean> editorsList) {
+        RecyclerView recyclerView = holder.getRecyclerViewById(holder.itemView, R.id.editors_crv_recycler_view);
+        GridLayoutManager manager = new GridLayoutManager(holder.itemView.getContext(), editorsList.size());
+        EditorsAdapter adapter = new EditorsAdapter(editorsList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(manager);
+    }
+
+    private void initHeaderView(MultipleBaseViewHolder holder, ThemesBean bean) {
+        ImageView imageView = holder.getImageViewById(holder.itemView, R.id.themes_header_iv_image);
+        PicassoHelper.loadImageBySimplyWay(holder.itemView.getContext(),
+                bean.getImage(), imageView);
+        holder.getTextViewById(holder.itemView, R.id.themes_header_tv_description).setText(bean.getDescription());
     }
 
     @Override
-    public int getItemViewType(int position) {
+    protected int getItemTypeId(int position) {
         if (position == 0) {
             return R.layout.item_rv_themes_header;
         } else if (position == 1) {
@@ -42,31 +78,5 @@ public class ThemeAdapter extends BaseAdapter<ThemesBean> {
         } else {
             return R.layout.item_rv_themes_news;
         }
-    }
-
-    @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        ThemesBean bean = mData.get(0);
-        if (position == 0) {
-            holder.getBinding().setVariable(getVariableId(), bean);
-            holder.getBinding().executePendingBindings();
-            return;
-        } else if (position == 1) {
-            List<ThemesBean.EditorsBean> list = bean.getEditors();
-            Log.d("CR7", "onBindViewHolder: " + list.size());
-            RecyclerView recyclerView = (RecyclerView) holder.itemView.findViewById(R.id.editors_crv_recycler_view);
-            GridLayoutManager manager = new GridLayoutManager(holder.itemView.getContext(), list.size());
-            EditorsAdapter adapter = new EditorsAdapter(list);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(manager);
-        } else {
-            List<ThemesBean.StoriesBean> list = bean.getStories();
-            holder.getBinding().setVariable(getVariableId(), list.get(position - 2));
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return mData == null ? 0 : mData.get(0).getStories().size() + 2;
     }
 }

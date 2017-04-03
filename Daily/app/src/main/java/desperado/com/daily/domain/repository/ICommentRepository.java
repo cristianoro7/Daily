@@ -2,7 +2,7 @@ package desperado.com.daily.domain.repository;
 
 import desperado.com.daily.data.bean.LongCommentsBean;
 import desperado.com.daily.data.bean.ShortCommentsBean;
-import desperado.com.daily.data.utils.interfacess.OnResultListener;
+import rx.Observable;
 
 /**
  * Created by desperado on 17-2-3.
@@ -10,7 +10,7 @@ import desperado.com.daily.data.utils.interfacess.OnResultListener;
 
 public interface ICommentRepository {
 
-    void getLongComment(int newsId, OnResultListener<LongCommentsBean> longCommentsBeanOnResultListener);
+    Observable<LongCommentsBean> getLongComment(int newsId);
 
-    void getShortComment(int newsId, OnResultListener<ShortCommentsBean> listener);
+    Observable<ShortCommentsBean> getShortComment(int newsId);
 }

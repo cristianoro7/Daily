@@ -1,30 +1,31 @@
 package desperado.com.daily.data.repository.source.remote;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import desperado.com.daily.data.bean.WelcomeBean;
-import desperado.com.daily.data.constants.Api;
 import desperado.com.daily.data.repository.source.interfaces.StartImageDataStore;
-import desperado.com.daily.data.utils.interfacess.OnResultListener;
-import desperado.com.daily.data.utils.network.NetworkExecutor;
+import desperado.com.daily.data.repository.source.remote.api.ApiContract;
+import desperado.com.daily.presentation.di.PerActivity;
+import retrofit2.Retrofit;
+import rx.Observable;
 
 /**
  * Created by desperado on 17-1-31.
  */
-@Singleton
+@PerActivity
 public class StartImageRemoteStore implements StartImageDataStore {
 
-    private NetworkExecutor networkExecutor;
+    private Retrofit mRetrofit;
 
     @Inject
-    public StartImageRemoteStore(NetworkExecutor networkExecutor) {
-        this.networkExecutor = networkExecutor;
+    public StartImageRemoteStore(Retrofit retrofit) {
+        this.mRetrofit = retrofit;
     }
 
     @Override
-    public void getStartImage(OnResultListener<WelcomeBean> listener) {
-        String url = Api.START_IMAGE;
-        networkExecutor.loadingDataFromNetwork(url, WelcomeBean.class, listener);
+    public Observable<WelcomeBean> getStartImage() {
+        ApiContract.StartImageService startImageService = mRetrofit
+                .create(ApiContract.StartImageService.class);
+        return startImageService.getStartImage();
     }
 }

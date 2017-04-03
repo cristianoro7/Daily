@@ -1,36 +1,43 @@
 package desperado.com.daily.presentation.comment.adapter;
 
+import android.widget.ImageView;
+
 import java.util.List;
 
-import desperado.com.daily.BR;
 import desperado.com.daily.R;
-import desperado.com.daily.presentation.base.Adapter.BaseAdapter;
-import desperado.com.daily.presentation.base.viewholder.BaseViewHolder;
 import desperado.com.daily.data.bean.CommentsBean;
+import desperado.com.daily.presentation.base.Adapter.MultipleBaseAdapter;
+import desperado.com.daily.presentation.utils.PicassoHelper;
 
 /**
  * Created by desperado on 17-1-16.
  */
 
-public class CommentAdapter extends BaseAdapter<CommentsBean> {
+public class CommentAdapter extends MultipleBaseAdapter<CommentsBean> {
 
     public CommentAdapter(List<CommentsBean> mData) {
         super(mData);
     }
 
     @Override
-    protected int getLayoutId(int type) {
-        return type;
+    protected int getCount() {
+        return mData == null ? 2 : mData.size() + 2;
     }
 
     @Override
-    protected int getVariableId() {
-        return BR.item;
+    protected void onBindView(MultipleBaseViewHolder holder, int position) {
+        if (position == 0 && mData.size() != 0) {
+            initCommentHeader(holder, position);
+        } else if (position == mData.size() + 1 && mData.size() != 0) {
+            initCommentBottom(holder, position);
+        } else if (mData != null && mData.size() != 0) {
+            initComment(holder, position);
+        }
     }
 
-    @Override
-    public int getItemViewType(int position) {
 
+    @Override
+    protected int getItemTypeId(int position) {
         if (position == 0) {
             return R.layout.part_rv_comment_header;
         } else if (position == mData.size() + 1) {
@@ -40,28 +47,31 @@ public class CommentAdapter extends BaseAdapter<CommentsBean> {
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mData == null ? 2 : mData.size() + 2;
+    private void initCommentHeader(MultipleBaseViewHolder holder, int position) {
+        CommentsBean bean = mData.get(position);
+        holder.getTextViewById(holder.itemView, R.id.comment_header_tv_long_comment)
+                .setText(bean.getLongCommentSize() + "条长评论");
     }
 
-    @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
-        CommentsBean bean = null;
-        if(position == 0 && mData.size() != 0) {
-            bean = mData.get(position);
-        } else if(position == mData.size() + 1 && mData.size() != 0) {
-            bean = mData.get(0);
-            holder.itemView.setTag(R.layout.part_tv_comment_bottom);
-        } else if(mData.size() != 0){
-            bean = mData.get(position - 1);
-        }
-        holder.getBinding().setVariable(getVariableId(), bean);
-        holder.getBinding().executePendingBindings();
+    private void initCommentBottom(MultipleBaseViewHolder holder, int position) {
+        CommentsBean bean = mData.get(0);
+        holder.itemView.setTag("");
+        holder.getTextViewById(holder.itemView, R.id.comment_bottom_tv_short_comment)
+                .setText(bean.getShortCommentSize() + "条短评论");
     }
 
-    public void addAll(List<CommentsBean> list) {
-        mData.addAll(mData.size() + 2, list);
-        notifyDataSetChanged();
+    private void initComment(MultipleBaseViewHolder holder, int position) {
+        CommentsBean bean = mData.get(position - 1);
+        ImageView imageView = holder.getImageViewById(holder.itemView, R.id.comment_iv_image);
+        PicassoHelper.loadImageBySimplyWay(holder.itemView.getContext(),
+                bean.getAvatar(), imageView);
+        holder.getTextViewById(holder.itemView, R.id.comment_tv_name).setText(bean.getAuthor());
+        holder.getTextViewById(holder.itemView, R.id.comments_tv_like).setText(bean.getLikes());
+        holder.getTextViewById(holder.itemView, R.id.comment_tv_content)
+                .setText(bean.getReply_to() != null ? bean.getContent() + "\n" + "回复://" +
+                        bean.getReply_to().getAuthor() + ":" + bean.getReply_to().getContent() :
+                        bean.getContent());
+        holder.getTextViewById(holder.itemView, R.id.comment_tv_date).setText(bean.getTime());
     }
+
 }

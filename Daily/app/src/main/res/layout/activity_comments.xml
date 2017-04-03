@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <data class="CommentsBinding">
-        <variable
-            name="model"
-            type="desperado.com.daily.presentation.comment.viewmodel.CommentViewModel"/>
-    </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -18,16 +12,11 @@
             android:background="@color/colorPrimary"
             app:popupTheme="@style/NewsCommentToolbarTheme"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="@{model.mTitle}"
             app:titleTextColor="@color/white"/>
 
         <desperado.com.daily.presentation.ui.CustomRecyclerView
             android:id="@+id/comment_rv_comments"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:adapter="@{model.getCommentAdapter()}"
-            app:layout_manager="@{model.getLayoutManager()}"
-            app:animator="@{model.getAnimator()}"/>
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
-</layout>

@@ -1,38 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <data class="WelcomeActivityBinding">
-
-        <variable
-            name="model"
-            type="desperado.com.daily.presentation.welcome.viewmodel.WelcomeViewModel" />
-    </data>
-
-    <RelativeLayout
-        android:fitsSystemWindows="true"
+    <ImageView
+        android:id="@+id/welcome_iv_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:fitsSystemWindows="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@{model.mStartImageUrl}"
-            android:scaleType="centerCrop"/>
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:scaleType="centerCrop"/>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="27dp"
-            android:textColor="#ffffffff"
-            android:textSize="20sp"
-            android:text="@{model.mImageSource}"
-            />
+    <TextView
+        android:id="@+id/welcome_tv_image_source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="27dp"
+        android:textColor="#ffffffff"
+        android:textSize="20sp" />
 
-    </RelativeLayout>
-</layout>
+</RelativeLayout>

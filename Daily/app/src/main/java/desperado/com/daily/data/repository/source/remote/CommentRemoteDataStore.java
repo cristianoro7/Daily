@@ -1,38 +1,38 @@
 package desperado.com.daily.data.repository.source.remote;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import desperado.com.daily.data.bean.LongCommentsBean;
 import desperado.com.daily.data.bean.ShortCommentsBean;
-import desperado.com.daily.data.constants.Api;
 import desperado.com.daily.data.repository.source.interfaces.CommentDataStore;
-import desperado.com.daily.data.utils.interfacess.OnResultListener;
-import desperado.com.daily.data.utils.network.NetworkExecutor;
+import desperado.com.daily.data.repository.source.remote.api.ApiContract;
+import desperado.com.daily.presentation.di.PerActivity;
+import retrofit2.Retrofit;
+import rx.Observable;
 
 /**
  * Created by desperado on 17-2-3.
  */
-@Singleton
+@PerActivity
 public class CommentRemoteDataStore implements CommentDataStore {
 
-    private NetworkExecutor networkExecutor;
+    private Retrofit mRetrofit;
 
     @Inject
-    public CommentRemoteDataStore(NetworkExecutor networkExecutor) {
-        this.networkExecutor = networkExecutor;
+    public CommentRemoteDataStore(Retrofit retrofit) {
+        this.mRetrofit = retrofit;
     }
 
     @Override
-    public void getLongComment(int newsId, OnResultListener<LongCommentsBean> longCommentsBeanOnResultListener) {
-        String url = Api.buildLongCommentsUrl(newsId);
-        networkExecutor.loadingDataFromNetwork(url, LongCommentsBean.class, longCommentsBeanOnResultListener);
+    public Observable<LongCommentsBean> getLongComment(int newsId) {
+        ApiContract.LongCommentService service = mRetrofit.create(ApiContract.LongCommentService.class);
+        return service.getLongComment(newsId + "");
     }
 
     @Override
-    public void getShortComment(int newsId, OnResultListener<ShortCommentsBean> listener) {
-        String url = Api.buildShortCommentsUrl(newsId);
-        networkExecutor.loadingDataFromNetwork(url, ShortCommentsBean.class, listener);
+    public Observable<ShortCommentsBean> getShortComment(int newsId) {
+        ApiContract.ShortCommentService shortCommentService = mRetrofit.create(ApiContract.ShortCommentService.class);
+        return shortCommentService.getShortComment(newsId + "");
     }
 }
 

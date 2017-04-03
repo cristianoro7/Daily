@@ -1,58 +1,86 @@
 package desperado.com.daily.presentation.main.fragment;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import butterknife.BindView;
 import desperado.com.daily.R;
-import desperado.com.daily.databinding.LatestBinding;
-import desperado.com.daily.databinding.MainActivityBinding;
+import desperado.com.daily.data.bean.LatestNewBean;
+import desperado.com.daily.presentation.base.fragment.BaseFragment;
 import desperado.com.daily.presentation.main.activity.MainActivity;
-import desperado.com.daily.presentation.main.viewmodel.MainViewModel;
+import desperado.com.daily.presentation.main.adapter.NewsAdapter;
+import desperado.com.daily.presentation.main.presenter.LatestContract;
+import desperado.com.daily.presentation.main.presenter.LatestPresenter;
 import desperado.com.daily.presentation.ui.CustomRecyclerView;
+import desperado.com.daily.presentation.ui.CustomSwipeRefreshLayout;
 
 /**
  * Created by desperado on 17-1-30.
  */
 
-public class LatestFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
+public class LatestFragment extends BaseFragment<MainActivity> implements SwipeRefreshLayout.OnRefreshListener,
         CustomRecyclerView.OnLoadMoreListener,
         CustomRecyclerView.OnChangeTitleListener,
-        CustomRecyclerView.OnItemClickListener {
+        CustomRecyclerView.OnItemClickListener,
+        LatestContract.View {
 
     private static final String TAG = LatestFragment.class.getSimpleName();
-    MainViewModel mMainViewModel;
-    LatestBinding mLatestBinding;
-    MainActivityBinding mMainBinding;
+    private RelativeLayout mDrawerMenu;
+    private DrawerLayout mDrawerLayout;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mLatestBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_latest, container, false);
-        setHasOptionsMenu(true);
-        return mLatestBinding.getRoot();
-    }
+    @Inject
+    NewsAdapter mNewsAdapter;
+    @Inject
+    @Named("LatestFragmentLayoutManager")
+    LinearLayoutManager mManager;
+    @Inject
+    LatestPresenter mLatestPresenter;
+
+    @BindView(R.id.main_tb_toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.main_rv_new)
+    CustomRecyclerView mRvCustomRecyclerView;
+    @BindView(R.id.main_csrl_refresh)
+    CustomSwipeRefreshLayout mSwlCustomSwipeRefreshLayout;
 
     public LatestFragment() {
     }
 
+    private void inject() {
+        getAttachActivity().getMainActivityComponent()
+                .getLatestFragmentComponent()
+                .inject(this);
+    }
+
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mMainBinding = ((MainActivity) getActivity()).getMainActivityBinding();
-        mMainViewModel = ((MainActivity) getActivity()).getMainViewModel();
+    public int getLayoutId() {
+        return R.layout.fragment_latest;
+    }
+
+    @Override
+    public boolean isHasOptionsMenu() {
+        return true;
+    }
+
+    @Override
+    public void init(Bundle savedInstanceState) {
+        mDrawerLayout = getAttachActivity().getDrawerLayout();
+        mDrawerMenu = getAttachActivity().getDrawerMenu();
         initToolbar();
         toggleToolBarDrawer(); //将Toolbar和DrawableLayout绑定
         initNews();
@@ -60,13 +88,23 @@ public class LatestFragment extends Fragment implements SwipeRefreshLayout.OnRef
         initListener();
     }
 
-    public static Fragment newInstance() {
-        return new LatestFragment();
+    @Override
+    public void onBindView() {
+        mLatestPresenter.onStart(this);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onDestroyBindingView() {
+        mLatestPresenter.onDestroy();
+    }
+
+    @Override
+    public void onInject() {
+        inject();
+    }
+
+    public static Fragment newInstance() {
+        return new LatestFragment();
     }
 
     @Override
@@ -76,51 +114,48 @@ public class LatestFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void initToolbar() {
-        mLatestBinding.mainTbToolbar.setTitle("首页");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mLatestBinding.mainTbToolbar);
-
+        mToolbar.setTitle("首页");
+        getAttachActivity().setSupportActionBar(mToolbar);
     }
 
     private void toggleToolBarDrawer() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), mMainBinding.mainDlDrawableLayout, mLatestBinding.mainTbToolbar,
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout, mToolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.setDrawerIndicatorEnabled(false);
-        mMainBinding.mainDlDrawableLayout.addDrawerListener(toggle);
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMainBinding.mainDlDrawableLayout.openDrawer(mMainBinding.mainRlDrawerMenu);
+                mDrawerLayout.openDrawer(mDrawerMenu);
             }
         });
     }
 
     private void initNews() {
-        mMainViewModel.initNewsLayoutManager(LinearLayoutManager.VERTICAL, getActivity());
-        mMainViewModel.initNewsAdapter(mMainViewModel.getmLatestNewList());
-        mLatestBinding.setModel(mMainViewModel);
-        mLatestBinding.mainCsrlRefresh.setRefreshing(false);
-        mMainViewModel.getNews();
+        mRvCustomRecyclerView.setLayoutManager(mManager);
+        mRvCustomRecyclerView.setAdapter(mNewsAdapter);
+        mLatestPresenter.getNews();
     }
 
     private void initRefreshLayout() {
-        mLatestBinding.mainCsrlRefresh.setColorSchemeRes(R.color.colorAccent);
-        mLatestBinding.mainCsrlRefresh.setOnRefreshListener(this);
+        mSwlCustomSwipeRefreshLayout.setColorSchemeRes(R.color.colorAccent);
+        mSwlCustomSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     private void initListener() {
-        mLatestBinding.mainRvNew.setOnItemClickListener(this);
-        mLatestBinding.mainRvNew.setLoadMoreListener(this, mMainViewModel.getNewsLayoutManager());
-        mLatestBinding.mainRvNew.setOnChangeTitleListener(this);
+        mRvCustomRecyclerView.setOnItemClickListener(this);
+        mRvCustomRecyclerView.setLoadMoreListener(this, mManager);
+        mRvCustomRecyclerView.setOnChangeTitleListener(this);
     }
 
     private void onRefreshs() {
-        mMainViewModel.refresh(mLatestBinding.mainCsrlRefresh);
+        mLatestPresenter.refresh();
     }
 
 
     private void onLoad() {
-        mMainViewModel.getNewsBefore();
+        mLatestPresenter.getNewsBefore();
     }
 
 
@@ -142,19 +177,44 @@ public class LatestFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onClick(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int position) {
         if (position >= 1) {
-            ((MainActivity) getActivity()).getNavigator().navigateToNewsDetailActivity(getActivity(),
-                    mMainViewModel.getmLatestNewList().get(position).getId());
+            getAttachActivity().getNavigator().navigateToNewsDetailActivity(getActivity(),
+                    mLatestPresenter.getStoryBean(position - 1).getId());
         }
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void refreshNewsUi(List<LatestNewBean.StoriesBean> storiesBeen) {
+        mNewsAdapter.notifiedDataSetHasChanged(storiesBeen);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop: onStop");
+    public void onStartRefreshAnim() {
+        mSwlCustomSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwlCustomSwipeRefreshLayout.setRefreshings(true);
+            }
+        });
+    }
+
+    @Override
+    public void onFinishRefreshAnim() {
+        mSwlCustomSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showNewsBefore(int index, List<LatestNewBean.StoriesBean> latestNewBeen) {
+        mNewsAdapter.notifiedDataSetHasChanged(index, latestNewBeen);
+    }
+
+
+    @Override
+    public void onDialogDismess() {
+
+    }
+
+    @Override
+    public void onShowDialog() {
+
     }
 }

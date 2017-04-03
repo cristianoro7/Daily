@@ -2,7 +2,7 @@ package desperado.com.daily.domain.repository;
 
 import desperado.com.daily.data.bean.NewsDetailBean;
 import desperado.com.daily.data.bean.NewsExtraBean;
-import desperado.com.daily.data.utils.interfacess.OnResultListener;
+import rx.Observable;
 
 /**
  * Created by desperado on 17-2-1.
@@ -10,7 +10,7 @@ import desperado.com.daily.data.utils.interfacess.OnResultListener;
 
 public interface INewsDetailRepository {
 
-    void getNewsDetail(int id, OnResultListener<NewsDetailBean> listener);
+    Observable<NewsDetailBean> getNewsDetail(int id);
 
-    void getNewExtra(int id, OnResultListener<NewsExtraBean> listener);
+    Observable<NewsExtraBean> getNewExtra(int id);
 }

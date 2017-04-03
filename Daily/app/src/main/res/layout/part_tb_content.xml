@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-
-    <data>
-
-        <variable
-            name="model"
-            type="desperado.com.daily.presentation.newdetail.viewmodel.NewsDetailViewModel" />
-    </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -26,12 +18,12 @@
                 android:src="@drawable/new_praise" />
 
             <TextView
+                android:id="@+id/news_detail_tv_praise_counts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="5dp"
-                android:text="@{model.mPraiseCounts}"
                 android:textColor="@color/white"
                 android:textSize="17sp" />
         </LinearLayout>
@@ -51,12 +43,12 @@
                 android:src="@drawable/new_comment" />
 
             <TextView
+                android:id="@+id/news_detail_tv_comment_counts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="5dp"
-                android:text="@{model.mCommentCounts}"
                 android:textColor="@color/white"
                 android:textSize="17sp" />
         </LinearLayout>
@@ -90,4 +82,3 @@
                 android:src="@drawable/share" />
         </LinearLayout>
     </RelativeLayout>
-</layout>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data class="BannerViewBinding">
-        <variable
-            name="BannerModel"
-            type="desperado.com.daily.presentation.main.viewmodel.MainViewModel"/>
-    </data>
+    <!--<data class="BannerViewBinding">-->
+        <!--<variable-->
+            <!--name="BannerModel"-->
+            <!--type="desperado.com.daily.presentation.main.viewmodel.MainViewModel"/>-->
+    <!--</data>-->
 
     <RelativeLayout
         android:background="@color/colorAccent"
@@ -14,23 +14,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/banner_iv_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@{BannerModel.url}" />
+        <!--<ImageView-->
+            <!--android:id="@+id/banner_iv_image"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@{BannerModel.url}" />-->
 
-        <TextView
-            android:id="@+id/banner_tv_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="17dp"
-            android:text="@{BannerModel.text}"
-            android:textColor="@color/white"
-            android:textSize="17sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/banner_tv_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_margin="17dp"-->
+            <!--android:text="@{BannerModel.text}"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="17sp" />-->
     </RelativeLayout>
 
 </layout>

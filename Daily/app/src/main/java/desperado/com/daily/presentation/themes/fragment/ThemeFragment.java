@@ -1,52 +1,63 @@
 package desperado.com.daily.presentation.themes.fragment;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import butterknife.BindView;
 import desperado.com.daily.R;
-import desperado.com.daily.databinding.MainActivityBinding;
-import desperado.com.daily.databinding.ThemesBinding;
+import desperado.com.daily.data.bean.ThemesBean;
+import desperado.com.daily.presentation.base.fragment.BaseFragment;
 import desperado.com.daily.presentation.main.activity.MainActivity;
-import desperado.com.daily.presentation.themes.viewmodel.ThemeViewModel;
+import desperado.com.daily.presentation.themes.adapter.ThemeAdapter;
+import desperado.com.daily.presentation.themes.presenter.ThemeContract;
+import desperado.com.daily.presentation.themes.presenter.ThemePresenter;
 import desperado.com.daily.presentation.ui.CustomRecyclerView;
 
 /**
  * Created by desperado on 17-1-22.
  */
 
-public class ThemeFragment extends Fragment implements CustomRecyclerView.OnItemClickListener {
+public class ThemeFragment extends BaseFragment<MainActivity> implements CustomRecyclerView.OnItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        ThemeContract.View {
 
     private static final String TAG = ThemeFragment.class.getSimpleName();
-    MainActivityBinding mBinding;
-    ThemesBinding mThemesBinding;
-    @Inject
-    ThemeViewModel mThemeViewModel;
     private static final String THEMES_ID = "theme_id";
 
+    private RelativeLayout mRlDrawerMenu;
+    private DrawerLayout mDrawerLayout;
+    private MainActivity mContainer;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mThemesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_themes, container, false);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mThemesBinding.themesTbToolbar);
-        inject();
-        setHasOptionsMenu(true);
-        getThemeContent();
-        return mThemesBinding.getRoot();
-    }
+    @BindView(R.id.themes_tb_toolbar)
+    Toolbar mTbToolbar;
+    @BindView(R.id.themes_rv_recycler_view)
+    CustomRecyclerView mRvCustomRecyclerView;
+    @BindView(R.id.themes_srl_refresh)
+    SwipeRefreshLayout mSrlRefreshLayout;
+
+    @Inject
+    ThemePresenter mThemePresenter;
+    @Inject
+    @Named("ThemeFragmentLayoutManager")
+    LinearLayoutManager mManager;
+    @Inject
+    ThemeAdapter mThemeAdapter;
+    private int mThemeId;
 
     public static Fragment getInstance(int themeId) {
         Fragment fragment = new ThemeFragment();
@@ -63,31 +74,70 @@ public class ThemeFragment extends Fragment implements CustomRecyclerView.OnItem
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mBinding = ((MainActivity) getActivity()).getMainActivityBinding(); //得到宿主activity的Binding，便于获取DrawableLayout的监听
-        toggleToolBarDrawer();
+    public int getLayoutId() {
+        return R.layout.fragment_themes;
+    }
+
+    @Override
+    public boolean isHasOptionsMenu() {
+        return true;
+    }
+
+    @Override
+    public void init(Bundle savedInstanceState) {
+        mDrawerLayout = getAttachActivity().getDrawerLayout();
+        mRlDrawerMenu = getAttachActivity().getDrawerMenu();
+        initToolbar();
         initListener();
+        toggleToolBarDrawer();
+        initTheme();
+    }
+
+    private void initTheme() {
+        mRvCustomRecyclerView.setLayoutManager(mManager);
+        mRvCustomRecyclerView.setAdapter(mThemeAdapter);
+        getThemeContent();
+    }
+
+    private void initToolbar() {
+        mTbToolbar.setTitle("");
+        getAttachActivity().setSupportActionBar(mTbToolbar);
+    }
+
+    @Override
+    public void onBindView() {
+        mThemePresenter.onStart(this);
+    }
+
+    @Override
+    public void onDestroyBindingView() {
+        mThemePresenter.onDestroy();
+    }
+
+    @Override
+    public void onInject() {
+        inject();
     }
 
     private void initListener() {
-        mThemesBinding.themesRvRecyclerView.setOnItemClickListener(this);
+        mRvCustomRecyclerView.setOnItemClickListener(this);
+        mSrlRefreshLayout.setOnRefreshListener(this);
     }
 
     /**
      * 绑定toolbar和DrawableLayout
      */
     private void toggleToolBarDrawer() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), mBinding.mainDlDrawableLayout,
-                mThemesBinding.themesTbToolbar,
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
+                mTbToolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.setDrawerIndicatorEnabled(false);
-        mBinding.mainDlDrawableLayout.addDrawerListener(toggle);
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBinding.mainDlDrawableLayout.openDrawer(mBinding.mainRlDrawerMenu);
+                mDrawerLayout.openDrawer(mRlDrawerMenu);
             }
         });
     }
@@ -95,22 +145,61 @@ public class ThemeFragment extends Fragment implements CustomRecyclerView.OnItem
     private void getThemeContent() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            int themeId = bundle.getInt(THEMES_ID);
-            Log.d(TAG, "getThemeContent: themes id is:" + themeId);
-            mThemeViewModel.initLayoutManager(getActivity());
-            mThemeViewModel.getThemesContent(themeId, mThemesBinding);
+            mThemeId = bundle.getInt(THEMES_ID);
+            mThemePresenter.getThemeContent(mThemeId);
         }
     }
 
     private void inject() {
-        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
+        getAttachActivity().getMainActivityComponent()
+                .getThemeFragmentComponent()
+                .inject(this);
     }
 
     @Override
     public void onClick(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int position) {
         if (position >= 2) {
-            ((MainActivity) getActivity()).getNavigator().navigateToNewsDetailActivity(getActivity(),
-                    mThemeViewModel.getmList().get(0).getStories().get(position - 2).getId());
+            getAttachActivity().getNavigator().navigateToNewsDetailActivity(getActivity(),
+                    mThemePresenter.getThemesBean().get(0).getStories().get(position - 2).getId());
         }
+    }
+
+    @Override
+    public void onDialogDismess() {
+
+    }
+
+    @Override
+    public void onShowDialog() {
+
+    }
+
+    @Override
+    public void showThemeContent(List<ThemesBean> bean) {
+        mThemeAdapter.notifiedDataSetHasChanged(bean);
+    }
+
+    @Override
+    public void showToolbarTitle(String title) {
+        mTbToolbar.setTitle(title);
+    }
+
+    @Override
+    public void onStartRefreshAnim() {
+        mSrlRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void onFinishRefreshAnim() {
+        mSrlRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh();
+    }
+
+    private void refresh() {
+        mThemePresenter.getThemeContent(mThemeId);
     }
 }

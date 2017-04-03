@@ -1,94 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <data>
-
-        <variable
-            name="item"
-            type="desperado.com.daily.data.bean.CommentsBean" />
-    </data>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        android:id="@+id/comment_rl_comment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/comment_rl_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/comment_iv_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/comment_iv_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_margin="10dp"
-                android:src="@{item.avatar}" />
+        <TextView
+            android:id="@+id/comment_tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@id/comment_iv_image"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/comment_tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_toRightOf="@id/comment_iv_image"
-                android:text="@{item.author}"
-                android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/comment_iv_vote"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="14dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/comment_vote" />
 
-            <ImageView
-                android:id="@+id/comment_iv_vote"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="14dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/comment_vote" />
+        <TextView
+            android:id="@+id/comments_tv_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/grey" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="16dp"
-                android:text="@{item.likes}"
-                android:textColor="@color/grey" />
+        <TextView
+            android:id="@+id/comment_tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/comment_tv_name"
+            android:layout_marginLeft="65dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:maxLines="25"/>
 
-            <TextView
-                android:id="@+id/comment_tv_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/comment_tv_name"
-                android:layout_marginLeft="65dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="20dp"
-                android:maxLines="25"
-                android:text="@{item.reply_to != null ? item.content + `\n` + `回复://` + item.reply_to.author + `:` + item.reply_to.content : item.content}" />
+        <TextView
+            android:id="@+id/comment_tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/comment_tv_content"
+            android:layout_marginBottom="13dp"
+            android:layout_marginLeft="65dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/grey"
+            android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/comment_tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/comment_tv_content"
-                android:layout_marginBottom="13dp"
-                android:layout_marginLeft="65dp"
-                android:layout_marginTop="20dp"
-                android:text="@{item.time}"
-                android:textColor="@color/grey"
-                android:textSize="12sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/comment_iv_vote"
+            android:layout_marginTop="58dp"
+            android:layout_toLeftOf="@id/comment_iv_vote"
+            android:gravity="center_horizontal"
+            android:text="展开"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/comment_iv_vote"
-                android:layout_marginTop="58dp"
-                android:layout_toLeftOf="@id/comment_iv_vote"
-                android:gravity="center_horizontal"
-                android:text="展开"
-                android:textColor="@color/colorPrimary"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-    </LinearLayout>
-</layout>
+    </RelativeLayout>
+</LinearLayout>
