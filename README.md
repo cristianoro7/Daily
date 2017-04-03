@@ -1,11 +1,10 @@
 ## 仿知乎日报--clean architecture实战
-* 项目主要采用clean architecture架构,其中展示层用的是谷歌的dataBindind
+* 项目主要采用clean architecture架构,其中展示层用的是谷歌的MVP
 
 ### 主要第三方库
 * Dagger2
-* DataBinding
-* Okhttp3
-* bolt-task
+* Retrofit
+* RxJava
 * Picasso
 
 ### 由于项目主要用于练手,所以难免存在缺陷
